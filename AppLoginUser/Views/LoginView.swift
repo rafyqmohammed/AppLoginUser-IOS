@@ -8,6 +8,7 @@
 import SwiftUI
 
 struct LoginView: View {
+    @EnvironmentObject var loginVM: LoginViewModel
     @State private var username: String = ""
     @State private var password: String = ""
 
@@ -30,8 +31,8 @@ struct LoginView: View {
                         Image(systemName: "envelope")
                             .foregroundColor(.gray)
                         TextField("Username / Email ", text: $username)
-                        
-                            
+                            .autocapitalization(.none)
+                            .keyboardType(.emailAddress)
                     }
                     .padding()
                     .background(Color.gray.opacity(0.1))
@@ -42,9 +43,7 @@ struct LoginView: View {
                              // icone
                              Image(systemName: "key")
                                  .foregroundColor(.gray)
-                             TextField("Password ", text: $password)
-                             
-                                 
+                             SecureField("Password ", text: $password)
                          }
                          .padding()
                          .background(Color.gray.opacity(0.1))
@@ -57,23 +56,45 @@ struct LoginView: View {
                         .foregroundColor(.gray)
                         .padding(.leading, 10)
                     }
+
+                    // Message d'erreur
+                    if !loginVM.error.isEmpty {
+                        Text(loginVM.error)
+                            .font(.footnote)
+                            .foregroundColor(.red)
+                            .multilineTextAlignment(.center)
+                            .padding(.horizontal)
+                    }
+
                     // Bouton Login avec Degrade
                     Button(action: {
-                        print("Login presse")
+                        Task {
+                            await loginVM.login(username: username, password: password)
+                        }
                     }){
-                        Text("Login")
-                            .font(.headline)
-                            .foregroundColor(.white)
-                            .frame(maxWidth: .infinity)
-                            .padding()
-                            .background(LinearGradient(gradient: Gradient(colors: [.red, .orange]),startPoint: .leading, endPoint: .trailing))
-                            .cornerRadius(25)
+                        if loginVM.wait {
+                            ProgressView()
+                                .progressViewStyle(CircularProgressViewStyle(tint: .white))
+                                .frame(maxWidth: .infinity)
+                                .padding()
+                                .background(LinearGradient(gradient: Gradient(colors: [.red, .orange]),startPoint: .leading, endPoint: .trailing))
+                                .cornerRadius(25)
+                        } else {
+                            Text("Login")
+                                .font(.headline)
+                                .foregroundColor(.white)
+                                .frame(maxWidth: .infinity)
+                                .padding()
+                                .background(LinearGradient(gradient: Gradient(colors: [.red, .orange]),startPoint: .leading, endPoint: .trailing))
+                                .cornerRadius(25)
+                        }
                     }
+                    .disabled(loginVM.wait)
                     .padding(.top, 10)
                     //lien d'inscription
                     HStack{
                         Text("Don't have an account?")
-                        Button("Resgiter"){
+                        Button("Register"){
                             //action
                         }
                         .foregroundColor(.red)
@@ -87,26 +108,14 @@ struct LoginView: View {
                 .cornerRadius(30)
                 .padding(20)
                 .shadow(radius: 20)
-                
-//                .padding()
-//                .background(){
-//                    Rectangle()
-//                        .foregroundStyle(Color.white)
-//                        .clipShape(RoundedRectangle(cornerRadius: 16, style:.continuous))
-//                        .shadow(radius: 15)
-//                    
-//                }
             }
-            
-         
-            
-            
            }
     }
 }
 
 #Preview {
     LoginView()
+        .environmentObject(LoginViewModel())
 }
 
 //struct BackgroundView: View {

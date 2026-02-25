@@ -8,8 +8,18 @@
 import SwiftUI
 
 struct ContentView: View {
+    @StateObject private var loginVM = LoginViewModel()
+
     var body: some View {
-        LoginView()
+        Group {
+            if loginVM.success {
+                UserInfo()
+                    .environmentObject(loginVM)
+            } else {
+                LoginView()
+                    .environmentObject(loginVM)
+            }
+        }
     }
 }
 
