@@ -10,6 +10,9 @@ import SwiftUI
 struct UserInfo: View {
     @EnvironmentObject var loginVM: LoginViewModel
 
+    private var user: UserModel? { loginVM.user }
+    private var token: TokenData? { loginVM.token }
+
     var body: some View {
         ZStack {
             LinearGradient(gradient: Gradient(colors: [.orange, .red]), startPoint: .top, endPoint: .bottom)
@@ -24,19 +27,28 @@ struct UserInfo: View {
                     .foregroundColor(.white)
                     .padding(.top, 40)
 
-                // Nom
-                Text(fullName)
+                // Nom complet
+                Text(user?.fullName ?? "Utilisateur")
                     .font(.title)
                     .bold()
                     .foregroundColor(.white)
 
+                // Fonction + Titre
+                if let fonction = user?.function, !fonction.isEmpty {
+                    Text(fonction)
+                        .font(.subheadline)
+                        .foregroundColor(.white.opacity(0.85))
+                }
+
                 // Carte d'infos
                 VStack(spacing: 16) {
-                    infoRow(icon: "envelope",  label: "Email",        value: stringValue("user_name"))
-                    infoRow(icon: "person",    label: "Identifiant",  value: stringValue("user_name"))
-                    infoRow(icon: "key",       label: "Token type",   value: stringValue("token_type"))
-                    infoRow(icon: "clock",     label: "Expire dans",  value: "\(intValue("expires_in"))s")
-                    infoRow(icon: "globe",     label: "Scope",        value: stringValue("scope"))
+                    infoRow(icon: "person.text.rectangle", label: "Titre",     value: user?.title ?? "—")
+                    infoRow(icon: "envelope",              label: "Email",     value: user?.mainEmail ?? "—")
+                    infoRow(icon: "phone",                 label: "Téléphone", value: user?.mainPhone ?? "—")
+                    infoRow(icon: "briefcase",             label: "Fonction",  value: user?.function ?? "—")
+                    infoRow(icon: "globe",                 label: "Langue",    value: user?.language ?? "—")
+                    infoRow(icon: "person.badge.key",       label: "Type",      value: user?.type ?? "—")
+                    infoRow(icon: "number",                label: "ID",        value: user.map { "\($0.id)" } ?? "—")
                 }
                 .padding()
                 .background(Color.white)
@@ -49,7 +61,8 @@ struct UserInfo: View {
                 // Bouton Déconnexion
                 Button(action: {
                     loginVM.success = false
-                    loginVM.result = [:]
+                    loginVM.user    = nil
+                    loginVM.token   = nil
                 }) {
                     Text("Se déconnecter")
                         .fontWeight(.semibold)
@@ -65,35 +78,16 @@ struct UserInfo: View {
         }
     }
 
-    // MARK: - Helpers
-
-    private var fullName: String {
-        let first = stringValue("first_name")
-        let last  = stringValue("last_name")
-        if !first.isEmpty || !last.isEmpty {
-            return "\(first) \(last)".trimmingCharacters(in: .whitespaces)
-        }
-        return stringValue("user_name").isEmpty ? "Utilisateur" : stringValue("user_name")
-    }
-
-    private func stringValue(_ key: String) -> String {
-        loginVM.result[key] as? String ?? "—"
-    }
-
-    private func intValue(_ key: String) -> Int {
-        loginVM.result[key] as? Int ?? 0
-    }
-
     @ViewBuilder
     private func infoRow(icon: String, label: String, value: String) -> some View {
         HStack(spacing: 12) {
             Image(systemName: icon)
                 .foregroundColor(.orange)
-                .frame(width: 24)
+                .frame(width: 28)
             Text(label)
                 .font(.subheadline)
                 .foregroundColor(.gray)
-                .frame(width: 100, alignment: .leading)
+                .frame(width: 90, alignment: .leading)
             Text(value)
                 .font(.subheadline)
                 .bold()

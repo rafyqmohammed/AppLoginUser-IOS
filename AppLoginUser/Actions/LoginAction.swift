@@ -17,7 +17,7 @@ class LoginAction {
     }
 
     func call(
-        completion: @escaping ([String: Any]) -> Void,
+        completion: @escaping (LoginApiResponse) -> Void,
         reject:     @escaping (String) -> Void
     ) async {
         // Construction du body en x-www-form-urlencoded
@@ -57,10 +57,11 @@ class LoginAction {
                 return
             }
 
-            if let json = try? JSONSerialization.jsonObject(with: data) as? [String: Any] {
-                completion(json)
-            } else {
-                reject("Impossible de lire la réponse du serveur.")
+            do {
+                let decoded = try JSONDecoder().decode(LoginApiResponse.self, from: data)
+                completion(decoded)
+            } catch {
+                reject("Erreur de décodage : \(error.localizedDescription)")
             }
 
         } catch {
