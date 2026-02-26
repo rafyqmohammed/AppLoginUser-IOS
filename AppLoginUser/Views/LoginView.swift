@@ -11,15 +11,17 @@ struct LoginView: View {
     @EnvironmentObject var loginVM: LoginViewModel
     @State private var username: String = ""
     @State private var password: String = ""
+    @State private var showRegister: Bool = false
 
     var body: some View {
+        NavigationStack {
         ZStack {
             //BackgroundView()
             LinearGradient(gradient: Gradient(colors: [.orange, .red]), startPoint: .top, endPoint: .bottom)
                 .ignoresSafeArea()
             //carte Blanche
             VStack(spacing: 20) {
-                Text("WELCOME")
+                Text("WELCOME !!!")
                     .font(.largeTitle)
                     .bold()
                     .foregroundColor(.white)
@@ -83,7 +85,7 @@ struct LoginView: View {
                             Text("Login")
                                 .font(.headline)
                                 .foregroundColor(.white)
-                                .frame(maxWidth: .infinity)
+                                .frame(width: 150)
                                 .padding()
                                 .background(LinearGradient(gradient: Gradient(colors: [.red, .orange]),startPoint: .leading, endPoint: .trailing))
                                 .cornerRadius(25)
@@ -95,7 +97,7 @@ struct LoginView: View {
                     HStack{
                         Text("Don't have an account?")
                         Button("Register"){
-                            //action
+                            showRegister = true
                         }
                         .foregroundColor(.red)
                         .bold()
@@ -110,6 +112,10 @@ struct LoginView: View {
                 .shadow(radius: 20)
             }
            }
+        .navigationDestination(isPresented: $showRegister) {
+            RegisterView()
+        }
+        }
     }
 }
 
