@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import Combine
 
 struct RegisterView: View {
     
@@ -21,11 +22,9 @@ struct RegisterView: View {
     var body: some View {
         ZStack {
             
-            // MARK: - Background Color
-            Color.orange
-                .ignoresSafeArea()
+            BackgroundView()
             
-            VStack(spacing: 20) {
+            VStack(spacing: 20)  {
                 
                 // MARK: - Title
                 Text("REGISTER")
@@ -88,6 +87,7 @@ struct RegisterView: View {
                 .shadow(radius: 20)
             }
             .padding()
+            .frame(width: 450)
         }
     }
 }
@@ -124,3 +124,31 @@ struct InputField: View {
         RegisterView()
     }
 }
+
+//struct BackgroundView: View {
+//
+//    private let imageURL = URL(string: "https://placehold.co/200x200/orange/orange.png")
+//
+//    var body: some View {
+//        AsyncImage(url: imageURL) { phase in
+//            switch phase {
+//
+//            case .success(let image):
+//                image
+//                    .resizable()
+//                    .scaledToFill()
+//
+//            case .failure, .empty:
+//                fallbackColor
+//
+//            @unknown default:
+//                fallbackColor
+//            }
+//        }
+//        .ignoresSafeArea()
+//    }
+//
+//    private var fallbackColor: some View {
+//        Color.orange
+//    }
+//}

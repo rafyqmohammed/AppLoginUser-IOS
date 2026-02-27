@@ -11,6 +11,7 @@ struct ContentView: View {
     @StateObject private var loginVM = LoginViewModel()
 
     var body: some View {
+
         Group {
             if loginVM.success {
                 UserInfo()

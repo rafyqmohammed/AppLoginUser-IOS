@@ -1,8 +1,4 @@
 //
-//  LoginViewModel.swift
-//  United Associates
-//
-//  Created by Housni El aich on 4/4/2025.
 //
 
 import Foundation

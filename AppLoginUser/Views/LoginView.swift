@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import Combine
 
 struct LoginView: View {
     @EnvironmentObject var loginVM: LoginViewModel
@@ -16,11 +17,20 @@ struct LoginView: View {
     var body: some View {
         NavigationStack {
         ZStack {
-            //BackgroundView()
-            LinearGradient(gradient: Gradient(colors: [.orange, .red]), startPoint: .top, endPoint: .bottom)
-                .ignoresSafeArea()
+            BackgroundView()
+//            LinearGradient(gradient: Gradient(colors: [.orange, .red]), startPoint: .top, endPoint: .bottom)
+//                .ignoresSafeArea()
             //carte Blanche
             VStack(spacing: 20) {
+
+                // Logo de l'application
+                Image("logo")
+                    .resizable()
+                    .aspectRatio(contentMode: .fit)
+                    .frame(width: 100, height: 100)
+                    .clipShape(RoundedRectangle(cornerRadius: 20))
+                    .shadow(radius: 10)
+
                 Text("WELCOME !!!")
                     .font(.largeTitle)
                     .bold()
@@ -111,6 +121,7 @@ struct LoginView: View {
                 .padding(20)
                 .shadow(radius: 20)
             }
+            .frame(width: 430)
            }
         .navigationDestination(isPresented: $showRegister) {
             RegisterView()
@@ -124,30 +135,30 @@ struct LoginView: View {
         .environmentObject(LoginViewModel())
 }
 
-//struct BackgroundView: View {
-//    
-//    private let imageURL = URL(string: "https://placehold.co/200x200/orange/orange.png")
-//    
-//    var body: some View {
-//        AsyncImage(url: imageURL) { phase in
-//            switch phase {
-//                
-//            case .success(let image):
-//                image
-//                    .resizable()
-//                    .scaledToFill()
-//                
-//            case .failure, .empty:
-//                fallbackColor
-//                
-//            @unknown default:
-//                fallbackColor
-//            }
-//        }
-//        .ignoresSafeArea()
-//    }
-//    
-//    private var fallbackColor: some View {
-//        Color.orange
-//    }
-//}
+struct BackgroundView: View {
+    
+    private let imageURL = URL(string: "https://placehold.co/200x200/orange/orange.png")
+    
+    var body: some View {
+        AsyncImage(url: imageURL) { phase in
+            switch phase {
+                
+            case .success(let image):
+                image
+                    .resizable()
+                    .scaledToFill()
+                
+            case .failure, .empty:
+                fallbackColor
+                
+            @unknown default:
+                fallbackColor
+            }
+        }
+        .ignoresSafeArea()
+    }
+    
+    private var fallbackColor: some View {
+        Color.orange
+    }
+}
