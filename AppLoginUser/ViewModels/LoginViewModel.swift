@@ -12,10 +12,8 @@ class LoginViewModel: ObservableObject {
     @Published var echec:   Bool   = false
     @Published var error:   String = ""
     @Published var wait:    Bool   = false
-    // conservé pour compatibilité
-    @Published var result:  [String: Any] = [:]
 
-    func login(username: String, password: String) async {
+    func login(username: String, password: String, appStore: AppStore) async {
         DispatchQueue.main.async { self.wait = true }
 
         await LoginAction(
@@ -35,6 +33,9 @@ class LoginViewModel: ObservableObject {
                 self.echec   = false
                 self.error   = ""
                 self.wait    = false
+
+                // Sauvegarder dans le Keychain et rediriger
+                appStore.saveSession(token: response.token, user: response.data.user)
             }
         }, reject: { message in
             DispatchQueue.main.async {

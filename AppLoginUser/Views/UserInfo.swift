@@ -8,10 +8,9 @@
 import SwiftUI
 
 struct UserInfo: View {
-    @EnvironmentObject var loginVM: LoginViewModel
+    @EnvironmentObject var appStore: AppStore
 
-    private var user: UserModel? { loginVM.user }
-    private var token: TokenData? { loginVM.token }
+    private var data: KeychainManager.UserKeychainData? { appStore.userInfo }
 
     var body: some View {
         ZStack {
@@ -28,27 +27,17 @@ struct UserInfo: View {
                     .padding(.top, 40)
 
                 // Nom complet
-                Text(user?.fullName ?? "Utilisateur")
+                Text("\(data?.firstName ?? "") \(data?.lastName ?? "")")
                     .font(.title)
                     .bold()
                     .foregroundColor(.white)
 
-                // Fonction + Titre
-                if let fonction = user?.function, !fonction.isEmpty {
-                    Text(fonction)
-                        .font(.subheadline)
-                        .foregroundColor(.white.opacity(0.85))
-                }
-
                 // Carte d'infos
                 VStack(spacing: 16) {
-                    infoRow(icon: "person.text.rectangle", label: "Titre",     value: user?.title ?? "—")
-                    infoRow(icon: "envelope",              label: "Email",     value: user?.mainEmail ?? "—")
-                    infoRow(icon: "phone",                 label: "Téléphone", value: user?.mainPhone ?? "—")
-                    infoRow(icon: "briefcase",             label: "Fonction",  value: user?.function ?? "—")
-                    infoRow(icon: "globe",                 label: "Langue",    value: user?.language ?? "—")
-                    infoRow(icon: "person.badge.key",       label: "Type",      value: user?.type ?? "—")
-                    infoRow(icon: "number",                label: "ID",        value: user.map { "\($0.id)" } ?? "—")
+                    infoRow(icon: "envelope",    label: "Email",     value: data?.mainEmail ?? "—")
+                    infoRow(icon: "number",      label: "ID",        value: data.map { "\($0.id)" } ?? "—")
+                    infoRow(icon: "key",         label: "Token",     value: String((data?.access_token ?? "—").prefix(20)) + "...")
+                    infoRow(icon: "clock",       label: "Expire",    value: data.map { "\($0.expires_in)s" } ?? "—")
                 }
                 .padding()
                 .background(Color.white)
@@ -60,9 +49,7 @@ struct UserInfo: View {
 
                 // Bouton Déconnexion
                 Button(action: {
-                    loginVM.success = false
-                    loginVM.user    = nil
-                    loginVM.token   = nil
+                    appStore.logout()
                 }) {
                     Text("Se déconnecter")
                         .fontWeight(.semibold)
@@ -101,5 +88,5 @@ struct UserInfo: View {
 
 #Preview {
     UserInfo()
-        .environmentObject(LoginViewModel())
+        .environmentObject(AppStore())
 }

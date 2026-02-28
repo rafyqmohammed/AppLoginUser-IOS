@@ -10,6 +10,7 @@ import Combine
 
 struct LoginView: View {
     @EnvironmentObject var loginVM: LoginViewModel
+    @EnvironmentObject var appStore: AppStore
     @State private var username: String = ""
     @State private var password: String = ""
     @State private var showRegister: Bool = false
@@ -81,7 +82,7 @@ struct LoginView: View {
                     // Bouton Login avec Degrade
                     Button(action: {
                         Task {
-                            await loginVM.login(username: username, password: password)
+                            await loginVM.login(username: username, password: password, appStore: appStore)
                         }
                     }){
                         if loginVM.wait {
@@ -133,6 +134,7 @@ struct LoginView: View {
 #Preview {
     LoginView()
         .environmentObject(LoginViewModel())
+        .environmentObject(AppStore())
 }
 
 struct BackgroundView: View {
