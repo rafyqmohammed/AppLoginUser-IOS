@@ -32,7 +32,8 @@ class AppStore: ObservableObject {
             id:           user.id,
             firstName:    user.firstName,
             lastName:     user.lastName,
-            mainEmail:    user.mainEmail,
+            mainEmail:    user.mainEmail,   
+            mainPhone:   user.mainPhone,
             avatarUrl:    nil
         )
         KeychainManager.shared.save(data: data)

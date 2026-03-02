@@ -38,6 +38,7 @@ struct UserInfo: View {
                     infoRow(icon: "number",      label: "ID",        value: data.map { "\($0.id)" } ?? "—")
                     infoRow(icon: "key",         label: "Token",     value: String((data?.access_token ?? "—").prefix(20)) + "...")
                     infoRow(icon: "clock",       label: "Expire",    value: data.map { "\($0.expires_in)s" } ?? "—")
+                    infoRow(icon: "phone",       label: "Phone",     value: data?.mainPhone ?? "—")
                 }
                 .padding()
                 .background(Color.white)

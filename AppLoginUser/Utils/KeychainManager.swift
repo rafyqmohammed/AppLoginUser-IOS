@@ -9,7 +9,6 @@ import Foundation
 import Security
 
 class KeychainManager {
-
     static let shared = KeychainManager()
     private let service = "com.apploginuser"
 
@@ -25,8 +24,12 @@ class KeychainManager {
         let firstName: String
         let lastName: String
         let mainEmail: String
+        let mainPhone: String?
         let avatarUrl: String?
     }
+
+
+
 
     // MARK: - Save
 
@@ -85,4 +88,11 @@ class KeychainManager {
     func hasData() -> Bool {
         return load() != nil
     }
+
+    // if KeychainManager.shared.hasData() {
+    // // utilisateur connecté
+    // } else {
+    // // afficher login
+    // }
+
 }

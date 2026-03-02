@@ -6,8 +6,6 @@
 //
 
 import SwiftUI
-
-
 @main
 struct AppLoginUserApp: App {
     var body: some Scene {
