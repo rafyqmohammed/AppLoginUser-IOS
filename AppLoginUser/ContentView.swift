@@ -8,14 +8,25 @@
 import SwiftUI
 
 struct ContentView: View {
+    @StateObject var appStore: AppStore = AppStore()
+   //@StateObject var loginVM: LoginViewModel = LoginViewModel()
+
     var body: some View {
-        VStack {
-            Image(systemName: "globe")
-                .imageScale(.large)
-                .foregroundStyle(.tint)
-            Text("Hello, world!")
+        switch appStore.page {
+        case "splash":
+            SplashScreen()
+                .environmentObject(appStore)
+        case "login":
+            LoginView()
+                .environmentObject(appStore)
+               // .environmentObject(loginVM)
+        case "userinfo":
+            UserInfo()
+                .environmentObject(appStore)
+        default:
+            SplashScreen()
+                .environmentObject(appStore)
         }
-        .padding()
     }
 }
 
