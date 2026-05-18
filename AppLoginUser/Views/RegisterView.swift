@@ -54,7 +54,7 @@ struct RegisterView: View {
                         Text("Sign Up")
                             .font(.headline)
                             .foregroundColor(.white)
-                            .frame(width: 150)
+                            .frame(maxWidth: .infinity)
                             .padding()
                             .background(
                                 LinearGradient(
@@ -64,8 +64,9 @@ struct RegisterView: View {
                                 )
                             )
                             .cornerRadius(25)
+                            .shadow(color: .orange.opacity(0.4), radius: 10, x: 0, y: 5)
                     }
-                    .padding(.top, 10)
+                    .padding(.top, 15)
                     
                     // MARK: - Sign In Link
                     HStack {
@@ -80,14 +81,13 @@ struct RegisterView: View {
                     .padding(.top, 5)
                     
                 }
-                .padding()
+                .padding(30)
                 .background(Color.white)
-                .cornerRadius(30)
-                .padding(20)
-                .shadow(radius: 20)
+                .cornerRadius(35)
+                .padding(.horizontal, 24)
+                .shadow(color: .black.opacity(0.15), radius: 15, x: 0, y: 10)
             }
-            .padding()
-            .frame(width: 450)
+            .frame(maxWidth: 450)
         }
     }
 }

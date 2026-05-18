@@ -9,7 +9,7 @@ import SwiftUI
 
 struct ContentView: View {
     @StateObject var appStore: AppStore = AppStore()
-    @StateObject var loginVM: LoginViewModel = LoginViewModel()
+   //@StateObject var loginVM: LoginViewModel = LoginViewModel()
 
     var body: some View {
         switch appStore.page {
@@ -19,7 +19,7 @@ struct ContentView: View {
         case "login":
             LoginView()
                 .environmentObject(appStore)
-                .environmentObject(loginVM)
+               // .environmentObject(loginVM)
         case "userinfo":
             UserInfo()
                 .environmentObject(appStore)

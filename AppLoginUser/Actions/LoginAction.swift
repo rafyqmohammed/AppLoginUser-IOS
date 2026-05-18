@@ -41,6 +41,7 @@ class LoginAction {
 
         do {
             let (data, response) = try await URLSession.shared.data(for: request)
+//            print("La data requête est !!!! \(String(data: data, encoding: .utf8) ?? "Impossible de décoder en UTF-8")")
 
             guard let http = response as? HTTPURLResponse else {
                 reject("Réponse invalide du serveur.")

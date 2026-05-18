@@ -9,11 +9,13 @@ import SwiftUI
 import Combine
 
 struct LoginView: View {
-    @EnvironmentObject var loginVM: LoginViewModel
+    @StateObject var loginVM: LoginViewModel = LoginViewModel()
+    //@EnvironmentObject var loginVM: LoginViewModel
     @EnvironmentObject var appStore: AppStore
     @State private var username: String = ""
     @State private var password: String = ""
     @State private var showRegister: Bool = false
+    
 
     var body: some View {
         NavigationStack {
@@ -37,7 +39,7 @@ struct LoginView: View {
                     .bold()
                     .foregroundColor(.white)
                 
-                VStack{
+                VStack(spacing: 20) {
                    // champ Username
                     HStack{
                         // icone
@@ -50,7 +52,8 @@ struct LoginView: View {
                     .padding()
                     .background(Color.gray.opacity(0.1))
                     .cornerRadius(25)
-                    VStack{
+                    
+                    VStack(alignment: .trailing, spacing: 8) {
                         // champ Password
                          HStack{
                              // icone
@@ -61,13 +64,14 @@ struct LoginView: View {
                          .padding()
                          .background(Color.gray.opacity(0.1))
                          .cornerRadius(25)
+                        
                         Button("forgot Password?"){
                             // Action
                         }
                         .font(.footnote)
                         .italic()
                         .foregroundColor(.gray)
-                        .padding(.leading, 10)
+                        .padding(.trailing, 10)
                     }
 
                     // Message d'erreur
@@ -92,18 +96,20 @@ struct LoginView: View {
                                 .padding()
                                 .background(LinearGradient(gradient: Gradient(colors: [.red, .orange]),startPoint: .leading, endPoint: .trailing))
                                 .cornerRadius(25)
+                                .shadow(color: .orange.opacity(0.4), radius: 10, x: 0, y: 5)
                         } else {
                             Text("Login")
                                 .font(.headline)
                                 .foregroundColor(.white)
-                                .frame(width: 150)
+                                .frame(maxWidth: .infinity)
                                 .padding()
                                 .background(LinearGradient(gradient: Gradient(colors: [.red, .orange]),startPoint: .leading, endPoint: .trailing))
                                 .cornerRadius(25)
+                                .shadow(color: .orange.opacity(0.4), radius: 10, x: 0, y: 5)
                         }
                     }
                     .disabled(loginVM.wait)
-                    .padding(.top, 10)
+                    .padding(.top, 15)
                     //lien d'inscription
                     HStack{
                         Text("Don't have an account?")
@@ -114,15 +120,16 @@ struct LoginView: View {
                         .bold()
                     }
                     .font(.footnote)
+                    .padding(.top, 5)
                     
                 }
-                .padding()
+                .padding(30)
                 .background(Color.white)
-                .cornerRadius(30)
-                .padding(20)
-                .shadow(radius: 20)
+                .cornerRadius(35)
+                .padding(.horizontal, 24)
+                .shadow(color: .black.opacity(0.15), radius: 15, x: 0, y: 10)
             }
-            .frame(width: 430)
+            .frame(maxWidth: 430)
            }
         .navigationDestination(isPresented: $showRegister) {
             RegisterView()
