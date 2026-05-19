@@ -9,6 +9,7 @@ import SwiftUI
 
 struct UserInfo: View {
     @EnvironmentObject var appStore: AppStore
+    @State private var tokenCopied = false
 
     private var data: KeychainManager.UserKeychainData? { appStore.userInfo }
 
@@ -36,7 +37,20 @@ struct UserInfo: View {
                 VStack(spacing: 16) {
                     infoRow(icon: "envelope",    label: "Email",     value: data?.mainEmail ?? "—")
                     infoRow(icon: "number",      label: "ID",        value: data.map { "\($0.id)" } ?? "—")
-                    infoRow(icon: "key",         label: "Token",     value: String((data?.access_token ?? "—").prefix(20)) + "...")
+
+                    // Token — tap pour copier
+                    infoRow(
+                        icon:  tokenCopied ? "checkmark.circle.fill" : "doc.on.doc",
+                        label: "Token",
+                        value: tokenCopied ? "Copied!" : String((data?.access_token ?? "—").prefix(20)) + "...",
+                        tint:  tokenCopied ? .green : .orange
+                    )
+                    .onTapGesture {
+                        UIPasteboard.general.string = data?.access_token ?? ""
+                        tokenCopied = true
+                        DispatchQueue.main.asyncAfter(deadline: .now() + 1.5) { tokenCopied = false }
+                    }
+
                     infoRow(icon: "clock",       label: "Expire",    value: data.map { "\($0.expires_in)s" } ?? "—")
                     infoRow(icon: "phone",       label: "Phone",     value: data?.mainPhone ?? "—")
                 }
@@ -67,10 +81,10 @@ struct UserInfo: View {
     }
 
     @ViewBuilder
-    private func infoRow(icon: String, label: String, value: String) -> some View {
+    private func infoRow(icon: String, label: String, value: String, tint: Color = .orange) -> some View {
         HStack(spacing: 12) {
             Image(systemName: icon)
-                .foregroundColor(.orange)
+                .foregroundColor(tint)
                 .frame(width: 28)
             Text(label)
                 .font(.subheadline)
@@ -79,7 +93,7 @@ struct UserInfo: View {
             Text(value)
                 .font(.subheadline)
                 .bold()
-                .foregroundColor(.primary)
+                .foregroundColor(tint == .green ? .green : .primary)
                 .lineLimit(1)
                 .truncationMode(.middle)
             Spacer()
