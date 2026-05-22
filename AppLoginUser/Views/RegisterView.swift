@@ -54,9 +54,6 @@ struct RegisterView: View {
                     // MARK: - Sign Up Button
                     Button(action: {
                         registerError = validate()
-                        if registerError.isEmpty {
-                            print("Register OK!")
-                        }
                     }) {
                         Text("Sign Up")
                             .font(.headline)
@@ -100,8 +97,9 @@ struct RegisterView: View {
 
     private func validate() -> String {
         if fullName.trimmingCharacters(in: .whitespaces).isEmpty { return "Full name is required." }
-        if !username.contains("@") { return "Please enter a valid email." }
-        if phoneNumber.isEmpty { return "Phone number is required." }
+        let emailRegex = /^[^@\s]+@[^@\s]+\.[^@\s]+$/
+        if (try? emailRegex.wholeMatch(in: username)) == nil { return "Please enter a valid email." }
+        if phoneNumber.trimmingCharacters(in: .whitespaces).isEmpty { return "Phone number is required." }
         if password.count < 6 { return "Password must be at least 6 characters." }
         if password != confirmPassword { return "Passwords do not match." }
         return ""

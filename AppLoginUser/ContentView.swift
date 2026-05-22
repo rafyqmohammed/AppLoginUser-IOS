@@ -9,22 +9,17 @@ import SwiftUI
 
 struct ContentView: View {
     @StateObject var appStore: AppStore = AppStore()
-   //@StateObject var loginVM: LoginViewModel = LoginViewModel()
 
     var body: some View {
         switch appStore.page {
-        case "splash":
+        case .splash:
             SplashScreen()
                 .environmentObject(appStore)
-        case "login":
+        case .login:
             LoginView()
                 .environmentObject(appStore)
-               // .environmentObject(loginVM)
-        case "userinfo":
+        case .userInfo:
             UserInfo()
-                .environmentObject(appStore)
-        default:
-            SplashScreen()
                 .environmentObject(appStore)
         }
     }

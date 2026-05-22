@@ -20,18 +20,16 @@ class LoginAction {
         completion: @escaping (LoginApiResponse) -> Void,
         reject:     @escaping (String) -> Void
     ) async {
-        // Construction du body en x-www-form-urlencoded
-        let bodyParts = [
-            "username=\(parameters.username)",
-            "password=\(parameters.password)",
-            "grant_type=\(parameters.grant_type)",
-            "scope=\(parameters.scope)",
-            "client_id=\(parameters.client_id)",
-            "client_secret=\(parameters.client_secret)"
+        var components = URLComponents()
+        components.queryItems = [
+            URLQueryItem(name: "username",      value: parameters.username),
+            URLQueryItem(name: "password",      value: parameters.password),
+            URLQueryItem(name: "grant_type",    value: parameters.grant_type),
+            URLQueryItem(name: "scope",         value: parameters.scope),
+            URLQueryItem(name: "client_id",     value: parameters.client_id),
+            URLQueryItem(name: "client_secret", value: parameters.client_secret)
         ]
-        let bodyString = bodyParts
-            .map { $0.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed) ?? $0 }
-            .joined(separator: "&")
+        let bodyString = components.percentEncodedQuery ?? ""
 
         var request = URLRequest(url: loginURL)
         request.httpMethod = "POST"

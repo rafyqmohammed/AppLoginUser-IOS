@@ -8,22 +8,28 @@
 import Foundation
 import Combine
 
+enum AppPage {
+    case splash, login, userInfo
+}
+
 class AppStore: ObservableObject {
-    @Published var page: String = "splash"
+    @Published var page: AppPage = .splash
     @Published var userInfo: KeychainManager.UserKeychainData? = nil
 
-    /// Vérifie si des données existent dans le Keychain
-    /// et redirige vers la bonne page
     func checkSession() {
-        if let data = KeychainManager.shared.load() {
-            userInfo = data
-            page = "userinfo"
+        guard let data = KeychainManager.shared.load() else {
+            page = .login
+            return
+        }
+        if isTokenExpired(data) {
+            KeychainManager.shared.delete()
+            page = .login
         } else {
-            page = "login"
+            self.userInfo = data
+            page = .userInfo
         }
     }
 
-    /// Sauvegarde les données user dans le Keychain après login
     func saveSession(token: TokenData, user: UserModel) {
         let data = KeychainManager.UserKeychainData(
             access_token: token.access_token,
@@ -32,19 +38,24 @@ class AppStore: ObservableObject {
             id:           user.id,
             firstName:    user.firstName,
             lastName:     user.lastName,
-            mainEmail:    user.mainEmail,   
-            mainPhone:   user.mainPhone,
+            mainEmail:    user.mainEmail,
+            mainPhone:    user.mainPhone,
             avatarUrl:    nil
         )
         KeychainManager.shared.save(data: data)
         userInfo = data
-        page = "userinfo"
+        page = .userInfo
     }
 
-    /// Supprime les données du Keychain et retourne au login
     func logout() {
         KeychainManager.shared.delete()
         userInfo = nil
-        page = "login"
+        page = .login
+    }
+
+    private func isTokenExpired(_ data: KeychainManager.UserKeychainData) -> Bool {
+        guard let createdAt = data.createdAt else { return false }
+        let expiryDate = Date(timeIntervalSince1970: Double(createdAt + data.expires_in))
+        return expiryDate < Date()
     }
 }

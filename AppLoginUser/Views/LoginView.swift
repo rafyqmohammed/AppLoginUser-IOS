@@ -123,29 +123,12 @@ struct LoginView: View {
 }
 
 struct BackgroundView: View {
-
-    private let imageURL = URL(string: "https://placehold.co/200x200/orange/orange.png")
-
     var body: some View {
-        AsyncImage(url: imageURL) { phase in
-            switch phase {
-
-            case .success(let image):
-                image
-                    .resizable()
-                    .scaledToFill()
-
-            case .failure, .empty:
-                fallbackColor
-
-            @unknown default:
-                fallbackColor
-            }
-        }
+        LinearGradient(
+            gradient: Gradient(colors: [.orange, .red]),
+            startPoint: .top,
+            endPoint: .bottom
+        )
         .ignoresSafeArea()
-    }
-
-    private var fallbackColor: some View {
-        Color.orange
     }
 }
