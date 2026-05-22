@@ -88,11 +88,4 @@ class KeychainManager {
     func hasData() -> Bool {
         return load() != nil
     }
-
-    // if KeychainManager.shared.hasData() {
-    // // utilisateur connecté
-    // } else {
-    // // afficher login
-    // }
-
 }
